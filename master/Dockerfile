@@ -3,6 +3,7 @@ ARG base
 FROM $base
 
 COPY entry_point.sh /opt/
+RUN chmod +x /opt/entry_point.sh
 
 ENV SPARK_MASTER_PORT 7077
 ENV SPARK_MASTER_WEBUI_PORT 8080
