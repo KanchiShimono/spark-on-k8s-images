@@ -3,7 +3,7 @@ FROM openjdk:8-jre-slim
 ENV SPARK_VERSION=2.4.5
 ENV HADOOP_VERSION=2.7
 ENV SPARK_HOME=/spark
-ENV PYENV_ROOT /root/.pyenv
+ENV PYENV_ROOT /opt/.pyenv
 ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
 
 # Install Build Tools
