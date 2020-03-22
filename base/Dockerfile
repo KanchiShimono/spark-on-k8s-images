@@ -1,5 +1,7 @@
 FROM openjdk:8-jre-slim
 
+ARG python_version=3.7.5
+
 ENV SPARK_VERSION=2.4.5
 ENV HADOOP_VERSION=2.7
 ENV SPARK_HOME=/spark
@@ -38,5 +40,5 @@ RUN set -eux; \
 # Install Python
 RUN set -eux; \
   git clone https://github.com/pyenv/pyenv.git ${PYENV_ROOT} && \
-  pyenv install 3.7.7 && \
-  pyenv global 3.7.7
+  pyenv install $python_version && \
+  pyenv global $python_version

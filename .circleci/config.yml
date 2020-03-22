@@ -12,6 +12,7 @@ jobs:
             echo "export PYTHON_VERSION=3.7.7" >> $BASH_ENV
             echo "export SPARK_VERSION=2.4.5" >> $BASH_ENV
             echo "export HADOOP_VERSION=2.7" >> $BASH_ENV
+            echo "export IMAGE_TAG=latest" >> $BASH_ENV
             echo "export OWNER=kanchishimono" >> $BASH_ENV
 
       - run:
@@ -22,19 +23,34 @@ jobs:
             ln -s spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} spark
 
       - run:
-          name: Build base Docker image
+          name: Build base worker Docker image
           command: |
             cd spark
             bin/docker-image-tool.sh -r ${OWNER} -t base build
 
       - run:
-          name: Custom pyspark Docker image
+          name: Custom pyspark worker Docker image
           command: |
-            docker build -t ${OWNER}/pyspark-worker:latest --build-arg base=${OWNER}/spark:base --build-arg python_version=${PYTHON_VERSION} .
+            docker build -t ${OWNER}/pyspark-worker:${IMAGE_TAG} --build-arg base=${OWNER}/spark:base --build-arg python_version=${PYTHON_VERSION} .
+
+      - run:
+          name: Build base master Docker image
+          command: |
+            cd base
+            docker build -t ${OWNER}/pyspark-base:${IMAGE_TAG} --build-arg python_version=${PYTHON_VERSION} .
+
+      - run:
+          name: Build master Docker image
+          command: |
+            cd master
+            docker build -t ${OWNER}/pyspark-master:${IMAGE_TAG} --build-arg base=${OWNER}/spark-base:${IMAGE_TAG} .
+
 
       - run:
           name: Push Docker image to Docker Hub
           command: |
             cd spark
             docker login -u ${OWNER} -p ${DOCKERHUB_PASSWD}
-            docker push ${OWNER}/pyspark-worker:latest
+            docker push ${OWNER}/pyspark-base:${IMAGE_TAG}
+            docker push ${OWNER}/pyspark-master:${IMAGE_TAG}
+            docker push ${OWNER}/pyspark-worker:${IMAGE_TAG}

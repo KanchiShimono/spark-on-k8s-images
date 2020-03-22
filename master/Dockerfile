@@ -1,4 +1,6 @@
-FROM kanchishimono/spark-base:latest
+ARG base
+
+FROM $base
 
 COPY entry_point.sh /
 
