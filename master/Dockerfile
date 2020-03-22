@@ -2,7 +2,7 @@ ARG base
 
 FROM $base
 
-COPY entry_point.sh /
+COPY entry_point.sh /opt/
 
 ENV SPARK_MASTER_PORT 7077
 ENV SPARK_MASTER_WEBUI_PORT 8080
@@ -15,4 +15,4 @@ RUN set -eux; \
     pyarrow \
     jupyterlab
 
-ENTRYPOINT ["/entry_point.sh"]
+ENTRYPOINT ["/opt/entry_point.sh"]
