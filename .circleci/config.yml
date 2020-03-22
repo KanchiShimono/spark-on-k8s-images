@@ -37,7 +37,7 @@ jobs:
           name: Build base master Docker image
           command: |
             cd base
-            docker build -t ${OWNER}/pyspark-base:${IMAGE_TAG} --build-arg python_version=${PYTHON_VERSION} .
+            docker build -t ${OWNER}/pyspark-base:${IMAGE_TAG} --build-arg SPARK_VERSION=${SPARK_VERSION} --build-arg HADOOP_VERSION=${HADOOP_VERSION} --build-arg python_version=${PYTHON_VERSION} .
 
       - run:
           name: Build master Docker image

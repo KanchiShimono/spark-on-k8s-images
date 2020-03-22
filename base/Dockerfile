@@ -1,10 +1,10 @@
 FROM openjdk:8-jre-slim
 
 ARG python_version=3.7.5
+ARG SPARK_VERSION=2.4.5
+ARG HADOOP_VERSION=2.7
 
-ENV SPARK_VERSION=2.4.5
-ENV HADOOP_VERSION=2.7
-ENV SPARK_HOME=/spark
+ENV SPARK_HOME=/opt/spark
 ENV PYENV_ROOT /opt/.pyenv
 ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
 
@@ -33,7 +33,7 @@ RUN set -eux; \
     liblzma-dev && \
   wget https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz && \
   tar -xvzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz && \
-  mv spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} /spark && \
+  mv spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} ${SPARK_HOME} && \
   rm spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz && \
   rm -rf /var/lib/apt/lists/*
 
