@@ -15,4 +15,4 @@ RUN set -eux; \
     pyarrow \
     jupyterlab
 
-CMD ["/bin/bash", "/entry_point.sh"]
+ENTRYPOINT ["/entry_point.sh"]
