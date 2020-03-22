@@ -1,0 +1,40 @@
+version: 2.1
+
+jobs:
+  build:
+    machine: true
+    steps:
+      - checkout
+
+      - run:
+          name: Set ENV
+          command: |
+            echo "export PYTHON_VERSION=3.7.7" >> $BASH_ENV
+            echo "export SPARK_VERSION=2.4.5" >> $BASH_ENV
+            echo "export HADOOP_VERSION=2.7" >> $BASH_ENV
+            echo "export OWNER=kanchishimono" >> $BASH_ENV
+
+      - run:
+          name: Install spark
+          command: |
+            wget https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
+            tar xzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
+            ln -s spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} spark
+
+      - run:
+          name: Build base Docker image
+          command: |
+            cd spark
+            bin/docker-image-tool.sh -r ${OWNER} -t base build
+
+      - run:
+          name: Custom pyspark Docker image
+          command: |
+            docker build -t ${OWNER}/pyspark-worker:latest --build-arg base=${OWNER}/spark:base --build-arg python_version=${PYTHON_VERSION} .
+
+      - run:
+          name: Push Docker image to Docker Hub
+          command: |
+            cd spark
+            docker login -u ${OWNER} -p ${DOCKERHUB_PASSWD}
+            docker push ${OWNER}/pyspark-worker:latest
