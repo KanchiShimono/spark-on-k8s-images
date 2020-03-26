@@ -10,4 +10,8 @@ ln -sf /dev/stdout $SPARK_MASTER_LOG/spark-master.out
 WORKDIR=/home/work/
 mkdir -p ${WORKDIR}
 cd ${WORKDIR}
-exec jupyter lab --ip=0.0.0.0 --no-browser --allow-root
+if [[ ! -z "${JUPYTER_TOKEN}" ]]; then
+    tokenOpt="--NotebookApp.token='${JUPYTER_TOKEN}'"
+fi
+exec jupyter lab --ip=0.0.0.0 --no-browser --allow-root $tokenOpt
+
