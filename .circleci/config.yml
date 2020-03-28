@@ -34,7 +34,7 @@ jobs:
             docker build -t ${OWNER}/pyspark-worker:${IMAGE_TAG} --build-arg base=${OWNER}/spark:base --build-arg python_version=${PYTHON_VERSION} .
 
       - run:
-          name: Build base master Docker image
+          name: Build base master and history server Docker image
           command: |
             cd base
             docker build -t ${OWNER}/pyspark-base:${IMAGE_TAG} --build-arg SPARK_VERSION=${SPARK_VERSION} --build-arg HADOOP_VERSION=${HADOOP_VERSION} --build-arg python_version=${PYTHON_VERSION} .
@@ -45,6 +45,11 @@ jobs:
             cd master
             docker build -t ${OWNER}/pyspark-master:${IMAGE_TAG} --build-arg base=${OWNER}/spark-base:${IMAGE_TAG} .
 
+      - run:
+          name: Build history server Docker image
+          command: |
+            cd history-server
+            docker build -t ${OWNER}/pyspark-history-server:${IMAGE_TAG} --build-arg base=${OWNER}/spark-base:${IMAGE_TAG} .
 
       - run:
           name: Push Docker image to Docker Hub
@@ -54,3 +59,4 @@ jobs:
             docker push ${OWNER}/pyspark-base:${IMAGE_TAG}
             docker push ${OWNER}/pyspark-master:${IMAGE_TAG}
             docker push ${OWNER}/pyspark-worker:${IMAGE_TAG}
+            docker push ${OWNER}/pyspark-history-server:${IMAGE_TAG}
