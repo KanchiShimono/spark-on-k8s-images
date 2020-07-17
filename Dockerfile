@@ -55,6 +55,14 @@ RUN set -eux; \
 COPY spark/python/pyspark ${SPARK_HOME}/python/pyspark
 COPY spark/python/lib ${SPARK_HOME}/python/lib
 
+#Install AWS-SDK
+ARG SPARK_VERSION=2.4.4
+ARG HADOOP_AWS_JAR_VERSION=2.7.3
+ARG AWS_JAVA_SDK_VERSION=1.7.4
+RUN curl -O https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/${SPARK_PACKAGE}.tgz \
+    && curl -o ${SPARK_HOME}/jars/hadoop-aws-${HADOOP_AWS_JAR_VERSION}.jar https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/${HADOOP_AWS_JAR_VERSION}/hadoop-aws-${HADOOP_AWS_JAR_VERSION}.jar \
+    && curl -o ${SPARK_HOME}/jars/aws-java-sdk-${AWS_JAVA_SDK_VERSION}.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/${AWS_JAVA_SDK_VERSION}/aws-java-sdk-${AWS_JAVA_SDK_VERSION}.jar \
+
 WORKDIR /opt/spark/work-dir
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
 
