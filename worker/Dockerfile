@@ -65,4 +65,7 @@ WORKDIR /opt/spark/work-dir
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
 
 ARG spark_uid=185
+# Change directory owner to spark running user
+# If did not change owner, access java.nio.file.AccessDeniedException will be occurred
+RUN chown -R ${spark_uid}:${spark_uid} /opt/spark/work-dir
 USER ${spark_uid}
