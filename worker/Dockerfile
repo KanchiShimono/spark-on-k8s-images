@@ -35,9 +35,19 @@ RUN set -eux; \
     libxml2-dev \
     libxmlsec1-dev \
     libffi-dev \
-    liblzma-dev && \
+    liblzma-dev \
+    file \
+    mecab \
+    libmecab-dev \
+    mecab-ipadic-utf8 && \
   rm -rf /var/cache/apt/* && \
   rm -rf /var/lib/apt/lists/*
+
+# Install neologd the dictionary for Mecab
+RUN set -eux; \
+  git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git /tmp/mecab-ipadic-neologd && \
+  /tmp/mecab-ipadic-neologd/bin/install-mecab-ipadic-neologd -n -y && \
+  rm -rf /tmp/mecab-ipadic-neologd
 
 # Install Python via pyenv
 RUN set -eux; \
@@ -50,7 +60,8 @@ RUN set -eux; \
   pip install \
     numpy \
     pandas \
-    pyarrow
+    pyarrow \
+    mecab-python3
 
 COPY spark/python/pyspark ${SPARK_HOME}/python/pyspark
 COPY spark/python/lib ${SPARK_HOME}/python/lib
