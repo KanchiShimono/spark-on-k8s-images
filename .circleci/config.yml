@@ -32,8 +32,7 @@ jobs:
       - run:
           name: Build base PySpark Docker image
           command: |
-            cd base
-            docker build -t ${OWNER}/pyspark-base:${IMAGE_TAG} --build-arg base=${OWNER}/spark:base --build-arg python_version=${PYTHON_VERSION} --build-arg spark_uid=${SPARK_UID} .
+            docker build -t ${OWNER}/pyspark-base:${IMAGE_TAG} --build-arg base=${OWNER}/spark:base --build-arg python_version=${PYTHON_VERSION} --build-arg spark_uid=${SPARK_UID} -f ./base/Dockerfile .
 
       - run:
           name: Build PySpark master Docker image
@@ -44,7 +43,8 @@ jobs:
       - run:
           name: Build PySpark worker Docker image
           command: |
-            docker build -t ${OWNER}/pyspark-worker:${IMAGE_TAG} --build-arg base=${OWNER}/pyspark-base:${IMAGE_TAG} --build-arg spark_uid=${SPARK_UID} -f ./worker/Dockerfile .
+            cd worker
+            docker build -t ${OWNER}/pyspark-worker:${IMAGE_TAG} --build-arg base=${OWNER}/pyspark-base:${IMAGE_TAG} --build-arg spark_uid=${SPARK_UID} .
 
       - run:
           name: Build history server Docker image
