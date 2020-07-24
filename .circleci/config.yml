@@ -57,7 +57,6 @@ jobs:
       - run:
           name: Push Docker image to Docker Hub
           command: |
-            cd spark
             docker login -u ${OWNER} -p ${DOCKERHUB_PASSWD}
             docker push ${OWNER}/pyspark-base:${IMAGE_TAG}
             docker push ${OWNER}/pyspark-master:${IMAGE_TAG}
