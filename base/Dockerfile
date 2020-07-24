@@ -63,8 +63,8 @@ RUN set -eux; \
     mecab-python3
 
 RUN mkdir ${SPARK_HOME}/python
-COPY python/pyspark ${SPARK_HOME}/python/pyspark
-COPY python/lib ${SPARK_HOME}/python/lib
+COPY spark/python/pyspark ${SPARK_HOME}/python/pyspark
+COPY spark/python/lib ${SPARK_HOME}/python/lib
 
 #Install AWS-SDK
 ARG HADOOP_AWS_JAR_VERSION=2.7.3

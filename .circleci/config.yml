@@ -21,7 +21,7 @@ jobs:
           command: |
             wget https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
             tar xzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
-            ln -s spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} spark
+            mv spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} spark
 
       - run:
           name: Build base Spark Docker image
