@@ -18,6 +18,7 @@ jobs:
 
       - run:
           name: Install spark
+          working_directory: ~/project/base
           command: |
             wget https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
             tar xzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
@@ -25,31 +26,32 @@ jobs:
 
       - run:
           name: Build base Spark Docker image
+          working_directory: ~/project/base/spark
           command: |
-            cd spark
             bin/docker-image-tool.sh -r ${OWNER} -t base build
 
       - run:
           name: Build base PySpark Docker image
+          working_directory: ~/project/base
           command: |
-            docker build -t ${OWNER}/pyspark-base:${IMAGE_TAG} --build-arg base=${OWNER}/spark:base --build-arg python_version=${PYTHON_VERSION} --build-arg spark_uid=${SPARK_UID} -f ./base/Dockerfile .
+            docker build -t ${OWNER}/pyspark-base:${IMAGE_TAG} --build-arg base=${OWNER}/spark:base --build-arg python_version=${PYTHON_VERSION} --build-arg spark_uid=${SPARK_UID} .
 
       - run:
           name: Build PySpark master Docker image
+          working_directory: ~/project/master
           command: |
-            cd master
             docker build -t ${OWNER}/pyspark-master:${IMAGE_TAG} --build-arg base=${OWNER}/pyspark-base:${IMAGE_TAG} .
 
       - run:
           name: Build PySpark worker Docker image
+          working_directory: ~/project/worker
           command: |
-            cd worker
             docker build -t ${OWNER}/pyspark-worker:${IMAGE_TAG} --build-arg base=${OWNER}/pyspark-base:${IMAGE_TAG} --build-arg spark_uid=${SPARK_UID} .
 
       - run:
           name: Build history server Docker image
+          working_directory: ~/project/history-server
           command: |
-            cd history-server
             docker build -t ${OWNER}/pyspark-history-server:${IMAGE_TAG} --build-arg base=${OWNER}/spark:base .
 
       - run:
