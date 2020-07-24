@@ -54,13 +54,11 @@ RUN set -eux; \
   pyenv install $python_version && \
   pyenv global $python_version
 
-# Install minimal python libraries for runnning pyspark
+# Install python libraries for runnning pyspark
+COPY requirements.txt /opt/requirements.txt
 RUN set -eux; \
-  pip install \
-    numpy \
-    pandas \
-    pyarrow \
-    mecab-python3
+  pip install -r /opt/requirements.txt && \
+  rm /opt/requirements.txt
 
 RUN mkdir ${SPARK_HOME}/python
 COPY spark/python/pyspark ${SPARK_HOME}/python/pyspark

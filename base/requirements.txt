@@ -1,0 +1,7 @@
+# minimal python libraries for runnning pyspark
+numpy
+pandas
+pyarrow
+
+# extra requirements
+mecab-python3
