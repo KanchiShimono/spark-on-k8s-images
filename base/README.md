@@ -1,6 +1,5 @@
 # Spark Base Image
 
-Base image for spark master and spark history server
+Base PySpark image for master and worker
 
-Worker image is not used this base image.
-Base image for worker is build by official tool [docker-image-tool.sh](https://github.com/apache/spark/blob/master/bin/docker-image-tool.sh).
+This image uses Spark base image built by official tool [docker-image-tool.sh](https://github.com/apache/spark/blob/master/bin/docker-image-tool.sh).
