@@ -4,6 +4,8 @@ FROM $base
 
 ARG python_version=3.7.5
 ARG spark_uid=185
+ARG HADOOP_AWS_JAR_VERSION=2.7.3
+ARG AWS_JAVA_SDK_VERSION=1.7.4
 
 ENV PYENV_ROOT /opt/.pyenv
 ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
@@ -64,9 +66,7 @@ RUN mkdir ${SPARK_HOME}/python
 COPY spark/python/pyspark ${SPARK_HOME}/python/pyspark
 COPY spark/python/lib ${SPARK_HOME}/python/lib
 
-#Install AWS-SDK
-ARG HADOOP_AWS_JAR_VERSION=2.7.3
-ARG AWS_JAVA_SDK_VERSION=1.7.4
+# Install AWS-SDK
 RUN curl -o ${SPARK_HOME}/jars/hadoop-aws-${HADOOP_AWS_JAR_VERSION}.jar https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/${HADOOP_AWS_JAR_VERSION}/hadoop-aws-${HADOOP_AWS_JAR_VERSION}.jar && \
   curl -o ${SPARK_HOME}/jars/aws-java-sdk-${AWS_JAVA_SDK_VERSION}.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/${AWS_JAVA_SDK_VERSION}/aws-java-sdk-${AWS_JAVA_SDK_VERSION}.jar
 
