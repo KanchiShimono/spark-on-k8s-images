@@ -40,8 +40,7 @@ jobs:
             -t ${OWNER}/pyspark-base:${IMAGE_TAG}
             --build-arg base=${OWNER}/spark:base
             --build-arg python_version=${PYTHON_VERSION}
-            --build-arg spark_uid=${
-            }
+            --build-arg spark_uid=${SPARK_UID}
             --build-arg HADOOP_AWS_JAR_VERSION=${HADOOP_AWS_JAR_VERSION}
             --build-arg AWS_JAVA_SDK_VERSION=${AWS_JAVA_SDK_VERSION}
             .
