@@ -10,7 +10,7 @@ jobs:
           name: Set ENV
           command: |
             echo "export PYTHON_VERSION=3.7.7" >> $BASH_ENV
-            echo "export SPARK_VERSION=2.4.5" >> $BASH_ENV
+            echo "export SPARK_VERSION=3.0.0" >> $BASH_ENV
             echo "export HADOOP_VERSION=2.7" >> $BASH_ENV
             echo "export HADOOP_AWS_JAR_VERSION=2.7.3" >> $BASH_ENV
             echo "export AWS_JAVA_SDK_VERSION=1.7.4" >> $BASH_ENV
@@ -40,7 +40,8 @@ jobs:
             -t ${OWNER}/pyspark-base:${IMAGE_TAG}
             --build-arg base=${OWNER}/spark:base
             --build-arg python_version=${PYTHON_VERSION}
-            --build-arg spark_uid=${SPARK_UID}
+            --build-arg spark_uid=${
+            }
             --build-arg HADOOP_AWS_JAR_VERSION=${HADOOP_AWS_JAR_VERSION}
             --build-arg AWS_JAVA_SDK_VERSION=${AWS_JAVA_SDK_VERSION}
             .
