@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  slack: circleci/slack@3.4.2
+
 jobs:
   build:
     machine: true
@@ -81,3 +84,5 @@ jobs:
             docker push ${OWNER}/pyspark-master:${IMAGE_TAG}
             docker push ${OWNER}/pyspark-worker:${IMAGE_TAG}
             docker push ${OWNER}/pyspark-history-server:${IMAGE_TAG}
+
+      - slack/status:
