@@ -85,4 +85,4 @@ jobs:
             docker push ${OWNER}/pyspark-worker:${IMAGE_TAG}
             docker push ${OWNER}/pyspark-history-server:${IMAGE_TAG}
 
-      - slack/status:
+      - slack/status
