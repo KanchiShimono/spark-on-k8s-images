@@ -14,7 +14,6 @@ jobs:
           command: |
             echo "export PYTHON_VERSION=3.7.7" >> $BASH_ENV
             echo "export SPARK_VERSION=3.0.0" >> $BASH_ENV
-            echo "export HADOOP_VERSION=3.2" >> $BASH_ENV
             echo "export HADOOP_AWS_JAR_VERSION=3.2.0" >> $BASH_ENV
             echo "export AWS_JAVA_SDK_VERSION=1.11.375" >> $BASH_ENV
             echo "export SPARK_UID=0" >> $BASH_ENV
@@ -25,9 +24,9 @@ jobs:
           name: Install spark
           working_directory: ~/project/base
           command: |
-            wget https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
-            tar xzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
-            mv spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} spark
+            wget https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-without-hadoop.tgz
+            tar xzf spark-${SPARK_VERSION}-bin-without-hadoop.tgz
+            mv spark-${SPARK_VERSION}-bin-without-hadoop spark
 
       - run:
           name: Build base Spark Docker image
