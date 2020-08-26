@@ -40,7 +40,8 @@ RUN set -eux; \
     file \
     mecab \
     libmecab-dev \
-    mecab-ipadic-utf8 && \
+    mecab-ipadic-utf8 \
+    procps && \
   rm -rf /var/cache/apt/* && \
   rm -rf /var/lib/apt/lists/*
 
