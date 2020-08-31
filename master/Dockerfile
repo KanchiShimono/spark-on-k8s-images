@@ -18,7 +18,14 @@ RUN set -eux; \
   pip install -r /opt/requirements.txt && \
   rm /opt/requirements.txt
 
+# Add spark user
+RUN useradd -m -u ${spark_uid} spark 
+
+RUN mkdir -p $SPARK_MASTER_LOG && \
+  ln -sf /dev/stdout $SPARK_MASTER_LOG/spark-master.out
+
 WORKDIR /opt/spark/work-dir
-ENTRYPOINT ["/opt/entry_point.sh"]
 
 USER ${spark_uid}
+
+ENTRYPOINT ["/opt/entry_point.sh"]
