@@ -74,7 +74,7 @@ RUN curl -o ${SPARK_HOME}/jars/hadoop-aws-${HADOOP_AWS_JAR_VERSION}.jar https://
 # Add spark user if spark_uid is not root
 # No name user causes "Exception: invalid null input: name" when starting history server
 RUN if [ ${spark_uid} != 0 ]; then \
-    useradd -m -u ${spark_uid} spark \
+    useradd -m -u ${spark_uid} spark; \
   fi
 
 # Change directory owner to spark running user
