@@ -22,59 +22,50 @@ jobs:
             echo "export OWNER=kanchishimono" >> $BASH_ENV
 
       - run:
-          name: Install spark
-          working_directory: ~/project/base
+          name: Download spark
+          working_directory: ~/project/pyspark
           command: |
             wget https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
             tar xzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
             mv spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} spark
 
+      # Download under the pyspark directory because some files are used on building pyspark image step
       - run:
-          name: Build base Spark Docker image
-          working_directory: ~/project/base/spark
+          name: Build Spark Docker image by official tool
+          working_directory: ~/project/pyspark/spark
           command: |
-            bin/docker-image-tool.sh -r ${OWNER} -t base build
+            bin/docker-image-tool.sh -r spark -t ${IMAGE_TAG} build
 
       - run:
-          name: Build base PySpark Docker image
-          working_directory: ~/project/base
+          name: Build custom Spark Docker image for Spark on k8s
+          working_directory: ~/project/spark
           command: >-
             docker build
-            -t ${OWNER}/pyspark-base:${IMAGE_TAG}
-            --build-arg base=${OWNER}/spark:base
-            --build-arg python_version=${PYTHON_VERSION}
+            -t ${OWNER}/spark:${IMAGE_TAG}
+            --build-arg base=spark/spark:${IMAGE_TAG}
             --build-arg spark_uid=${SPARK_UID}
             --build-arg HADOOP_AWS_JAR_VERSION=${HADOOP_AWS_JAR_VERSION}
             --build-arg AWS_JAVA_SDK_VERSION=${AWS_JAVA_SDK_VERSION}
             .
 
       - run:
-          name: Build PySpark master Docker image
-          working_directory: ~/project/master
+          name: Build PySpark Docker image
+          working_directory: ~/project/pyspark
           command: >-
             docker build
-            -t ${OWNER}/pyspark-master:${IMAGE_TAG}
-            --build-arg base=${OWNER}/pyspark-base:${IMAGE_TAG}
+            -t ${OWNER}/pyspark:${IMAGE_TAG}
+            --build-arg base=${OWNER}/spark:${IMAGE_TAG}
+            --build-arg python_version=${PYTHON_VERSION}
             --build-arg spark_uid=${SPARK_UID}
             .
 
       - run:
-          name: Build PySpark worker Docker image
-          working_directory: ~/project/worker
+          name: Build PySpark with Jupyter server Docker image
+          working_directory: ~/project/pyspark-jupyter
           command: >-
             docker build
-            -t ${OWNER}/pyspark-worker:${IMAGE_TAG}
-            --build-arg base=${OWNER}/pyspark-base:${IMAGE_TAG}
-            --build-arg spark_uid=${SPARK_UID}
-            .
-
-      - run:
-          name: Build history server Docker image
-          working_directory: ~/project/history-server
-          command: >-
-            docker build
-            -t ${OWNER}/pyspark-history-server:${IMAGE_TAG}
-            --build-arg base=${OWNER}/spark:base
+            -t ${OWNER}/pyspark-jupyter:${IMAGE_TAG}
+            --build-arg base=${OWNER}/pyspark:${IMAGE_TAG}
             --build-arg spark_uid=${SPARK_UID}
             .
 
@@ -82,9 +73,8 @@ jobs:
           name: Push Docker image to Docker Hub
           command: |
             docker login -u ${OWNER} -p ${DOCKERHUB_PASSWD}
-            docker push ${OWNER}/pyspark-base:${IMAGE_TAG}
-            docker push ${OWNER}/pyspark-master:${IMAGE_TAG}
-            docker push ${OWNER}/pyspark-worker:${IMAGE_TAG}
-            docker push ${OWNER}/pyspark-history-server:${IMAGE_TAG}
+            docker push ${OWNER}/spark:${IMAGE_TAG}
+            docker push ${OWNER}/pyspark:${IMAGE_TAG}
+            docker push ${OWNER}/pyspark-jupyter:${IMAGE_TAG}
 
       - slack/status
