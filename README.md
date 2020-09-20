@@ -2,9 +2,8 @@
 
 Docker images for spark on kubernetes
 
-| Name           | Description                                                                                                                                                                                     |
-| :------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| base           | Base PySpark image for master and worker. This image uses Spark base image built by official tool [docker-image-tool.sh](https://github.com/apache/spark/blob/master/bin/docker-image-tool.sh). |
-| history-server | Spark history server                                                                                                                                                                            |
-| master         | Spark master                                                                                                                                                                                    |
-| worker         | Spark worker                                                                                                                                                                                    |
+| Name            | Description                                                                                                                                                                           |
+| :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| spark           | Spark image for Spark on k8s. This image built on the image that built by official tool [docker-image-tool.sh](https://github.com/apache/spark/blob/master/bin/docker-image-tool.sh). |
+| pyspark         | PySpark image for Spark on k8s. Install PySpark on Spark image.                                                                                                                       |
+| pyspark-jupyter | Install Jupyter Lab Server on PySpark image.                                                                                                                                          |
