@@ -25,6 +25,9 @@ RUN set -eux; \
 RUN mkdir -p $SPARK_MASTER_LOG && \
   ln -sf /dev/stdout $SPARK_MASTER_LOG/spark-master.out
 
+COPY jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
+RUN chown -R ${spark_uid}:${spark_uid} /etc/jupyter
+
 USER ${spark_uid}
 
 ENTRYPOINT ["/opt/jupyter-entrypoint.sh"]
