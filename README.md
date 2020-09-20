@@ -1,5 +1,7 @@
 # spark-on-k8s-images
 
+[![CircleCI status](https://circleci.com/gh/KanchiShimono/spark-on-k8s-images.svg?style=svg)](https://circleci.com/gh/KanchiShimono/spark-on-k8s-images)
+
 Docker images for spark on kubernetes
 
 | Name            | Description                                                                                                                                                                           |
