@@ -118,3 +118,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Push to DockerHub
+        env:
+          SPARK_TAGS: ${{ steps.meta.outputs.spark_tags }}
+          PYSPARK_TAGS: ${{ steps.meta.outputs.pyspark_tags }}
+          JUPYTER_TAGS: ${{ steps.meta.outputs.pyspark_jupyter_tags }}
+        run: |
+          for tag in ${SPARK_TAGS//,/ } ${PYSPARK_TAGS//,/ } ${JUPYTER_TAGS//,/ }; do
+            docker push $tag
+          done
