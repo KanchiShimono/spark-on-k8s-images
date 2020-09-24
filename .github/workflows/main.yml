@@ -1,6 +1,12 @@
 name: Build
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "v*.*.*"
+  pull_request:
 
 env:
   PYTHON_VERSION: 3.7.7
@@ -31,6 +37,8 @@ jobs:
             VERSION=${GITHUB_REF#refs/tags/}
           elif [[ $GITHUB_REF == refs/heads/* ]]; then
             VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION=pr-${{ github.event.number }}
           fi
 
           TAGS=${VERSION}
@@ -120,6 +128,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Push to DockerHub
+        if: ${{ github.event_name != 'pull_request' }}
         env:
           SPARK_TAGS: ${{ steps.meta.outputs.spark_tags }}
           PYSPARK_TAGS: ${{ steps.meta.outputs.pyspark_tags }}
