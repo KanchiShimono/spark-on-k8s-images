@@ -74,6 +74,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./spark
+          file: ./spark/Dockerfile
           build-args: |
             base=spark/spark:${{ env.VERSION }}
             spark_uid=${{ env.SPARK_UID }}
@@ -86,6 +87,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./pyspark
+          file: ./pyspark/Dockerfile
           build-args: |
             base=spark/spark:${{ env.VERSION }}
             spark_uid=${{ env.SPARK_UID }}
@@ -97,6 +99,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./pyspark-jupyter
+          file: ./pyspark-jupyter/Dockerfile
           build-args: |
             base=${{ env.IMAGE_OWNER }}/${{ env.PYSPARK_IMAGE_NAME }}:${{ env.VERSION }}
             spark_uid=${{ env.SPARK_UID }}
