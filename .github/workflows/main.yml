@@ -92,7 +92,7 @@ jobs:
           context: ./pyspark
           file: ./pyspark/Dockerfile
           build-args: |
-            base=spark/spark:${{ env.VERSION }}
+            base=${{ env.IMAGE_OWNER }}/${{ env.SPARK_IMAGE_NAME }}:${{ env.VERSION }}
             spark_uid=${{ env.SPARK_UID }}
             python_version=${{ env.PYTHON_VERSION }}
           load: true
