@@ -1,6 +1,6 @@
 # spark-on-k8s-images
 
-[![CircleCI status](https://circleci.com/gh/KanchiShimono/spark-on-k8s-images.svg?style=svg)](https://circleci.com/gh/KanchiShimono/spark-on-k8s-images)
+[![GitHub Actions status](https://github.com/KanchiShimono/spark-on-k8s-images/workflows/Build/badge.svg)](https://github.com/KanchiShimono/spark-on-k8s-images/actions?query=workflow%3ABuild)
 
 Docker images for spark on kubernetes
 
