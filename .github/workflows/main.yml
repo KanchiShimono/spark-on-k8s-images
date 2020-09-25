@@ -64,7 +64,7 @@ jobs:
             echo ::set-output name="${image//-/_}_tags"::${IMAGE_TAGS}
           done
 
-          echo ::set-env name=VERSION::${VERSION}
+          echo ::set-output name=VERSION::${VERSION}
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 
       - name: Download Spark
@@ -83,7 +83,7 @@ jobs:
       - name: Build Spark Docker image by official tool
         working-directory: ./pyspark/spark
         run: |
-          bin/docker-image-tool.sh -r spark -t ${VERSION} build
+          bin/docker-image-tool.sh -r spark -t ${{ steps.meta.outputs.VERSION }} build
 
       - name: Build custom Spark Docker image for Spark on k8s
         uses: docker/build-push-action@v2
@@ -91,18 +91,18 @@ jobs:
           context: ./spark
           file: ./spark/Dockerfile
           build-args: |
-            base=spark/spark:${{ env.VERSION }}
+            base=spark/spark:${{ steps.meta.outputs.VERSION }}
             spark_uid=${{ env.SPARK_UID }}
             HADOOP_AWS_JAR_VERSION=${{ env.HADOOP_AWS_JAR_VERSION }}
             AWS_JAVA_SDK_VERSION=${{ env.AWS_JAVA_SDK_VERSION }}
           load: true
           tags: ${{ steps.meta.outputs.spark_tags }}
-          labels:
+          labels: |
             org.opencontainers.image.title=${{ github.event.repository.name }}
             org.opencontainers.image.description=${{ github.event.repository.description }}
             org.opencontainers.image.url=${{ github.event.repository.html_url }}
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ env.VERSION }}
+            org.opencontainers.image.version=${{ steps.meta.outputs.VERSION }}
             org.opencontainers.image.created=${{ steps.meta.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
 
@@ -112,17 +112,17 @@ jobs:
           context: ./pyspark
           file: ./pyspark/Dockerfile
           build-args: |
-            base=${{ env.IMAGE_OWNER }}/${{ env.SPARK_IMAGE_NAME }}:${{ env.VERSION }}
+            base=${{ env.IMAGE_OWNER }}/${{ env.SPARK_IMAGE_NAME }}:${{ steps.meta.outputs.VERSION }}
             spark_uid=${{ env.SPARK_UID }}
             python_version=${{ env.PYTHON_VERSION }}
           load: true
           tags: ${{ steps.meta.outputs.pyspark_tags }}
-          labels:
+          labels: |
             org.opencontainers.image.title=${{ github.event.repository.name }}
             org.opencontainers.image.description=${{ github.event.repository.description }}
             org.opencontainers.image.url=${{ github.event.repository.html_url }}
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ env.VERSION }}
+            org.opencontainers.image.version=${{ steps.meta.outputs.VERSION }}
             org.opencontainers.image.created=${{ steps.meta.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
 
@@ -132,16 +132,16 @@ jobs:
           context: ./pyspark-jupyter
           file: ./pyspark-jupyter/Dockerfile
           build-args: |
-            base=${{ env.IMAGE_OWNER }}/${{ env.PYSPARK_IMAGE_NAME }}:${{ env.VERSION }}
+            base=${{ env.IMAGE_OWNER }}/${{ env.PYSPARK_IMAGE_NAME }}:${{ steps.meta.outputs.VERSION }}
             spark_uid=${{ env.SPARK_UID }}
           load: true
           tags: ${{ steps.meta.outputs.pyspark_jupyter_tags }}
-          labels:
+          labels: |
             org.opencontainers.image.title=${{ github.event.repository.name }}
             org.opencontainers.image.description=${{ github.event.repository.description }}
             org.opencontainers.image.url=${{ github.event.repository.html_url }}
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ env.VERSION }}
+            org.opencontainers.image.version=${{ steps.meta.outputs.VERSION }}
             org.opencontainers.image.created=${{ steps.meta.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
 
