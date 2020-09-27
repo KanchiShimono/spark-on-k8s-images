@@ -2,7 +2,7 @@ ARG base
 
 FROM $base
 
-ARG python_version=3.7.5
+ARG python_version=3.8.5
 ARG spark_uid=185
 
 ENV PYENV_ROOT /opt/.pyenv
