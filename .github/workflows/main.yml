@@ -99,7 +99,7 @@ jobs:
           load: true
           tags: ${{ steps.meta.outputs.spark_tags }}
           labels: |
-            org.opencontainers.image.title=${{ github.event.repository.name }}
+            org.opencontainers.image.title=${{ env.SPARK_IMAGE_NAME }}
             org.opencontainers.image.description=${{ github.event.repository.description }}
             org.opencontainers.image.url=${{ github.event.repository.html_url }}
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
@@ -119,7 +119,7 @@ jobs:
           load: true
           tags: ${{ steps.meta.outputs.pyspark_tags }}
           labels: |
-            org.opencontainers.image.title=${{ github.event.repository.name }}
+            org.opencontainers.image.title=${{ env.PYSPARK_IMAGE_NAME }}
             org.opencontainers.image.description=${{ github.event.repository.description }}
             org.opencontainers.image.url=${{ github.event.repository.html_url }}
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
@@ -138,7 +138,7 @@ jobs:
           load: true
           tags: ${{ steps.meta.outputs.pyspark_jupyter_tags }}
           labels: |
-            org.opencontainers.image.title=${{ github.event.repository.name }}
+            org.opencontainers.image.title=${{ env.JUPYTER_IMAGE_NAME }}
             org.opencontainers.image.description=${{ github.event.repository.description }}
             org.opencontainers.image.url=${{ github.event.repository.html_url }}
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
