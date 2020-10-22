@@ -53,7 +53,7 @@ RUN set -eux; \
 # Install python libraries for runnning pyspark
 COPY requirements.txt /opt/requirements.txt
 RUN set -eux; \
-  pip install -r /opt/requirements.txt && \
+  pip install --no-cache-dir -r /opt/requirements.txt && \
   rm /opt/requirements.txt
 
 RUN mkdir ${SPARK_HOME}/python
