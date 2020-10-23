@@ -1,4 +1,5 @@
 jupyterlab
+jupyterlab_code_formatter
 flake8
 black
 mypy
