@@ -37,7 +37,10 @@ RUN mkdir -p $SPARK_MASTER_LOG && \
 RUN jupyter labextension install @lckr/jupyterlab_variableinspector --no-build && \
   jupyter labextension install @jupyterlab/toc --no-build && \
   jupyter labextension install @ryantam626/jupyterlab_code_formatter --no-build && \
-  jupyter lab build && \
+  jupyter lab build -y && \
+  jupyter lab clean -y && \
+  jlpm cache clean && \
+  npm cache clean --force && \
   sudo -u#${spark_uid} $PYENV_ROOT/shims/jupyter serverextension enable --py jupyterlab_code_formatter
 
 COPY jupyter-entrypoint.sh /opt/
