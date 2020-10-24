@@ -1,5 +1,9 @@
 jupyterlab
+jupyterlab_code_formatter
 flake8
 black
+yapf
+pylint
+autopep8
 mypy
 isort

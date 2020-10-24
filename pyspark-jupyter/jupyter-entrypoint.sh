@@ -1,7 +1,4 @@
 #!/bin/bash
 
-WORKDIR=/home/spark/work
-mkdir -p ${WORKDIR}
-cd ${WORKDIR}
-
+cd ${HOME}
 exec jupyter lab
