@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WORKDIR=/home/spark/work
+WORKDIR=/home/spark
 mkdir -p ${WORKDIR}
 cd ${WORKDIR}
 
