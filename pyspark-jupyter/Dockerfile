@@ -30,4 +30,4 @@ RUN chmod 666 /etc/jupyter/jupyter_notebook_config.py
 
 USER ${spark_uid}
 
-ENTRYPOINT ["/opt/jupyter-entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/opt/jupyter-entrypoint.sh"]
