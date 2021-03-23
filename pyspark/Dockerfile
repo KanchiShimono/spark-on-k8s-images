@@ -1,4 +1,7 @@
 ARG base
+ARG base_pyspark
+
+FROM ${base_pyspark} as base-pyspark
 
 FROM $base
 
@@ -57,7 +60,7 @@ RUN set -eux; \
   rm /opt/requirements.txt
 
 RUN mkdir ${SPARK_HOME}/python
-COPY origin-spark/python/pyspark ${SPARK_HOME}/python/pyspark
-COPY origin-spark/python/lib ${SPARK_HOME}/python/lib
+COPY --from=base-pyspark ${SPARK_HOME}/python/pyspark ${SPARK_HOME}/python/pyspark
+COPY --from=base-pyspark ${SPARK_HOME}/python/lib ${SPARK_HOME}/python/lib
 
 USER ${spark_uid}

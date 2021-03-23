@@ -29,6 +29,7 @@ do
         -r spark \
         -t ${TAG} \
         -f Dockerfile \
+        -p bindings/python/Dockerfile \
         -u ${SPARK_UID} \
         build
     )
@@ -37,8 +38,8 @@ do
   if [ "$TARGET" = "spark" ] || [ "$REPLY" = "a" ]; then
     # Build custom Spark Docker image
     (
-      cd spark \
-      && docker build \
+      cd spark && \
+      docker build \
         -t ${IMAGE_OWNER}/spark:${TAG} \
         --build-arg base=spark/spark:${TAG} \
         --build-arg spark_uid=${SPARK_UID} \
@@ -51,11 +52,11 @@ do
   if [ "$TARGET" = "pyspark" ] || [ "$REPLY" = "a" ]; then
     # Build PySpark Docker image
     (
-      cp -rp origin-spark pyspark/ && \
-      cd pyspark \
-      && docker build \
+      cd pyspark && \
+      docker build \
         -t ${IMAGE_OWNER}/pyspark:${TAG} \
         --build-arg base=${IMAGE_OWNER}/spark:${TAG} \
+        --build-arg base_pyspark=spark/spark-py:${TAG} \
         --build-arg spark_uid=${SPARK_UID} \
         --build-arg PYTHON_VERSION=${PYTHON_VERSION} \
         .
@@ -65,8 +66,8 @@ do
   if [ "$TARGET" = "pyspark-jupyter" ] || [ "$REPLY" = "a" ]; then
     # Build PySpark with Jupyter Docker image
     (
-      cd pyspark-jupyter \
-      && docker build \
+      cd pyspark-jupyter && \
+      docker build \
         -t ${IMAGE_OWNER}/pyspark-jupyter:${TAG} \
         --build-arg base=${IMAGE_OWNER}/pyspark:${TAG} \
         --build-arg spark_uid=${SPARK_UID} \
