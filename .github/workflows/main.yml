@@ -84,7 +84,7 @@ jobs:
       - name: Build Ubuntu based Spark and PySpark image by official tool
         working-directory: ./base-spark
         run: >
-          bin/docker-image-tool.sh
+          origin-spark/bin/docker-image-tool.sh
             -r spark
             -t ${{ steps.meta.outputs.VERSION }}
             -f Dockerfile
