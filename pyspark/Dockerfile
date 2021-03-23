@@ -57,7 +57,7 @@ RUN set -eux; \
   rm /opt/requirements.txt
 
 RUN mkdir ${SPARK_HOME}/python
-COPY spark/python/pyspark ${SPARK_HOME}/python/pyspark
-COPY spark/python/lib ${SPARK_HOME}/python/lib
+COPY origin-spark/python/pyspark ${SPARK_HOME}/python/pyspark
+COPY origin-spark/python/lib ${SPARK_HOME}/python/lib
 
 USER ${spark_uid}
