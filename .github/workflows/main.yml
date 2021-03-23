@@ -85,12 +85,12 @@ jobs:
         working-directory: ./base-spark
         run: >
           origin-spark/bin/docker-image-tool.sh
-            -r spark
-            -t ${{ steps.meta.outputs.VERSION }}
-            -f Dockerfile
-            -p bindings/python/Dockerfile
-            -u ${SPARK_UID}
-            build
+          -r spark
+          -t ${{ steps.meta.outputs.VERSION }}
+          -f Dockerfile
+          -p bindings/python/Dockerfile
+          -u ${SPARK_UID}
+          build
 
       - name: Build custom Spark Docker image for Spark on k8s
         uses: docker/build-push-action@v2
