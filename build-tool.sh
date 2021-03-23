@@ -58,7 +58,7 @@ do
         --build-arg base=${IMAGE_OWNER}/spark:${TAG} \
         --build-arg base_pyspark=spark/spark-py:${TAG} \
         --build-arg spark_uid=${SPARK_UID} \
-        --build-arg PYTHON_VERSION=${PYTHON_VERSION} \
+        --build-arg python_version=${PYTHON_VERSION} \
         .
     )
   fi
