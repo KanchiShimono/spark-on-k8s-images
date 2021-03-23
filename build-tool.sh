@@ -12,8 +12,9 @@ PS3="What do you build? (Enter 'a' for build all) > "
 select TARGET in base-spark spark pyspark pyspark-jupyter
 do
   # Downlaod Spark
-  if [ ! -e origin-spark ]; then
+  if [ ! -e base-spark/origin-spark ]; then
     (
+      cd base-spark && \
       wget https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz && \
       tar xzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz && \
       mv spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} origin-spark
@@ -23,7 +24,6 @@ do
   if [ "$TARGET" = "base-spark" ] || [ "$REPLY" = "a" ]; then
     # Build original Spark Docker image
     (
-      cp -rp origin-spark base-spark/ && \
       cd base-spark && \
       origin-spark/bin/docker-image-tool.sh \
         -r spark \
