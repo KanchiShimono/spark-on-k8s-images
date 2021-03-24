@@ -69,11 +69,11 @@ jobs:
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 
       - name: Download Spark
-        working-directory: ./pyspark
+        working-directory: ./base-spark
         run: |
           wget https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
           tar xzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
-          mv spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} spark
+          mv spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} origin-spark
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -81,10 +81,16 @@ jobs:
           driver: docker
           install: true
 
-      - name: Build Spark Docker image by official tool
-        working-directory: ./pyspark/spark
-        run: |
-          bin/docker-image-tool.sh -r spark -t ${{ steps.meta.outputs.VERSION }} build
+      - name: Build Ubuntu based Spark and PySpark image by official tool
+        working-directory: ./base-spark
+        run: >
+          origin-spark/bin/docker-image-tool.sh
+          -r spark
+          -t ${{ steps.meta.outputs.VERSION }}
+          -f Dockerfile
+          -p bindings/python/Dockerfile
+          -u ${SPARK_UID}
+          build
 
       - name: Build custom Spark Docker image for Spark on k8s
         uses: docker/build-push-action@v2
@@ -114,6 +120,7 @@ jobs:
           file: ./pyspark/Dockerfile
           build-args: |
             base=${{ env.IMAGE_OWNER }}/${{ env.SPARK_IMAGE_NAME }}:${{ steps.meta.outputs.VERSION }}
+            base_pyspark=spark/spark-py:${{ steps.meta.outputs.VERSION }}
             spark_uid=${{ env.SPARK_UID }}
             python_version=${{ env.PYTHON_VERSION }}
           load: true
