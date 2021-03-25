@@ -76,4 +76,7 @@ RUN set -eux; \
   rm -rf /var/cache/apt/* && \
   rm -rf /var/lib/apt/lists/*
 
+# TODO: Install TensorRT in the future
+# TensorRT is not available for Ubuntu 20.04
+
 USER ${spark_uid}
