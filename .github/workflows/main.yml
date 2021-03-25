@@ -20,6 +20,9 @@ env:
   SPARK_IMAGE_NAME: spark
   PYSPARK_IMAGE_NAME: pyspark
   JUPYTER_IMAGE_NAME: pyspark-jupyter
+  SPARK_GPU_IMAGE_NAME: spark-gpu
+  PYSPARK_GPU_IMAGE_NAME: pyspark-gpu
+  JUPYTER_GPU_IMAGE_NAME: pyspark-jupyter-gpu
 
 jobs:
   build:
@@ -51,7 +54,7 @@ jobs:
           fi
 
           TAG_ARRAY=(${TAGS//,/ })
-          for image in ${SPARK_IMAGE_NAME} ${PYSPARK_IMAGE_NAME} ${JUPYTER_IMAGE_NAME}; do
+          for image in ${SPARK_IMAGE_NAME} ${PYSPARK_IMAGE_NAME} ${JUPYTER_IMAGE_NAME} ${SPARK_GPU_IMAGE_NAME} ${PYSPARK_GPU_IMAGE_NAME} ${JUPYTER_GPU_IMAGE_NAME}; do
             IMAGE_TAGS=""
 
             for tag in "${TAG_ARRAY[@]}"; do
@@ -153,6 +156,65 @@ jobs:
             org.opencontainers.image.created=${{ steps.meta.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
 
+      - name: Build Spark GPU Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./spark-gpu
+          file: ./spark-gpu/Dockerfile
+          build-args: |
+            base=${{ env.IMAGE_OWNER }}/${{ env.SPARK_IMAGE_NAME }}:${{ steps.meta.outputs.VERSION }}
+            spark_uid=${{ env.SPARK_UID }}
+          load: true
+          tags: ${{ steps.meta.outputs.spark_gpu_tags }}
+          labels: |
+            org.opencontainers.image.title=${{ env.SPARK_GPU_IMAGE_NAME }}
+            org.opencontainers.image.description=${{ github.event.repository.description }}
+            org.opencontainers.image.url=${{ github.event.repository.html_url }}
+            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
+            org.opencontainers.image.version=${{ steps.meta.outputs.VERSION }}
+            org.opencontainers.image.created=${{ steps.meta.outputs.created }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      - name: Build PySpark GPU Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./pyspark
+          file: ./pyspark/Dockerfile
+          build-args: |
+            base=${{ env.IMAGE_OWNER }}/${{ env.SPARK_GPU_IMAGE_NAME }}:${{ steps.meta.outputs.VERSION }}
+            base_pyspark=spark/spark-py:${{ steps.meta.outputs.VERSION }}
+            spark_uid=${{ env.SPARK_UID }}
+            python_version=${{ env.PYTHON_VERSION }}
+          load: true
+          tags: ${{ steps.meta.outputs.pyspark_gpu_tags }}
+          labels: |
+            org.opencontainers.image.title=${{ env.PYSPARK_GPU_IMAGE_NAME }}
+            org.opencontainers.image.description=${{ github.event.repository.description }}
+            org.opencontainers.image.url=${{ github.event.repository.html_url }}
+            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
+            org.opencontainers.image.version=${{ steps.meta.outputs.VERSION }}
+            org.opencontainers.image.created=${{ steps.meta.outputs.created }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      - name: Build PySpark GPU with Jupyter server Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./pyspark-jupyter
+          file: ./pyspark-jupyter/Dockerfile
+          build-args: |
+            base=${{ env.IMAGE_OWNER }}/${{ env.PYSPARK_GPU_IMAGE_NAME }}:${{ steps.meta.outputs.VERSION }}
+            spark_uid=${{ env.SPARK_UID }}
+          load: true
+          tags: ${{ steps.meta.outputs.pyspark_jupyter_gpu_tags }}
+          labels: |
+            org.opencontainers.image.title=${{ env.JUPYTER_GPU_IMAGE_NAME }}
+            org.opencontainers.image.description=${{ github.event.repository.description }}
+            org.opencontainers.image.url=${{ github.event.repository.html_url }}
+            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
+            org.opencontainers.image.version=${{ steps.meta.outputs.VERSION }}
+            org.opencontainers.image.created=${{ steps.meta.outputs.created }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
@@ -165,7 +227,10 @@ jobs:
           SPARK_TAGS: ${{ steps.meta.outputs.spark_tags }}
           PYSPARK_TAGS: ${{ steps.meta.outputs.pyspark_tags }}
           JUPYTER_TAGS: ${{ steps.meta.outputs.pyspark_jupyter_tags }}
+          SPARK_GPU_TAGS: ${{ steps.meta.outputs.spark_gpu_tags }}
+          PYSPARK_GPU_TAGS: ${{ steps.meta.outputs.pyspark_gpu_tags }}
+          JUPYTER_GPU_TAGS: ${{ steps.meta.outputs.pyspark_jupyter_gpu_tags }}
         run: |
-          for tag in ${SPARK_TAGS//,/ } ${PYSPARK_TAGS//,/ } ${JUPYTER_TAGS//,/ }; do
+          for tag in ${SPARK_TAGS//,/ } ${PYSPARK_TAGS//,/ } ${JUPYTER_TAGS//,/ } ${SPARK_GPU_TAGS//,/ } ${PYSPARK_GPU_TAGS//,/ } ${JUPYTER_GPU_TAGS//,/ }; do
             docker push $tag
           done

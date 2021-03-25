@@ -9,7 +9,7 @@ SPARK_VERSION=3.0.0
 TAG=master
 
 PS3="What do you build? (Enter 'a' for build all) > "
-select TARGET in base-spark spark pyspark pyspark-jupyter
+select TARGET in base-spark spark pyspark pyspark-jupyter spark-gpu pyspark-gpu pyspark-jupyter-gpu
 do
   # Downlaod Spark
   if [ ! -e base-spark/origin-spark ]; then
@@ -22,7 +22,7 @@ do
   fi
 
   if [ "$TARGET" = "base-spark" ] || [ "$REPLY" = "a" ]; then
-    # Build original Spark Docker image
+    # Build base Spark Docker image
     (
       cd base-spark && \
       origin-spark/bin/docker-image-tool.sh \
@@ -70,6 +70,44 @@ do
       docker build \
         -t ${IMAGE_OWNER}/pyspark-jupyter:${TAG} \
         --build-arg base=${IMAGE_OWNER}/pyspark:${TAG} \
+        --build-arg spark_uid=${SPARK_UID} \
+        .
+    )
+  fi
+
+  if [ "$TARGET" = "spark-gpu" ] || [ "$REPLY" = "a" ]; then
+    # Build custom Spark GPU Docker image
+    (
+      cd spark-gpu && \
+      docker build \
+        -t ${IMAGE_OWNER}/spark-gpu:${TAG} \
+        --build-arg base=${IMAGE_OWNER}/spark:${TAG} \
+        --build-arg spark_uid=${SPARK_UID} \
+        .
+    )
+  fi
+
+  if [ "$TARGET" = "pyspark-gpu" ] || [ "$REPLY" = "a" ]; then
+    # Build PySpark GPU Docker image
+    (
+      cd pyspark && \
+      docker build \
+        -t ${IMAGE_OWNER}/pyspark-gpu:${TAG} \
+        --build-arg base=${IMAGE_OWNER}/spark-gpu:${TAG} \
+        --build-arg base_pyspark=spark/spark-py:${TAG} \
+        --build-arg spark_uid=${SPARK_UID} \
+        --build-arg python_version=${PYTHON_VERSION} \
+        .
+    )
+  fi
+
+  if [ "$TARGET" = "pyspark-jupyter-gpu" ] || [ "$REPLY" = "a" ]; then
+    # Build PySpark GPU with Jupyter Docker image
+    (
+      cd pyspark-jupyter && \
+      docker build \
+        -t ${IMAGE_OWNER}/pyspark-jupyter-gpu:${TAG} \
+        --build-arg base=${IMAGE_OWNER}/pyspark-gpu:${TAG} \
         --build-arg spark_uid=${SPARK_UID} \
         .
     )
