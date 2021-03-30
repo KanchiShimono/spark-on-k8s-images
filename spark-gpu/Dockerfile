@@ -22,14 +22,14 @@ RUN set -eux; \
   rm -rf /var/cache/apt/* && \
   rm -rf /var/lib/apt/lists/*
 
-ENV CUDA_VERSION 11.2.2
+ENV CUDA_VERSION 11.0.3
 
 RUN set -eux; \
   apt update && \
   apt install -y --no-install-recommends \
-    cuda-cudart-11-2=11.2.152-1 \
-    cuda-compat-11-2 && \
-  ln -s cuda-11.2 /usr/local/cuda && \
+    cuda-cudart-11-0=11.0.221-1 \
+    cuda-compat-11-0 && \
+  ln -s cuda-11.0 /usr/local/cuda && \
   rm -rf /var/cache/apt/* && \
   rm -rf /var/lib/apt/lists/*
 
@@ -43,7 +43,7 @@ ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64
 # nvidia-container-runtime
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
-ENV NVIDIA_REQUIRE_CUDA "cuda>=11.2 brand=tesla,driver>=418,driver<419 brand=tesla,driver>=440,driver<441 driver>=450,driver<451"
+ENV NVIDIA_REQUIRE_CUDA "cuda>=11.0 brand=tesla,driver>=418,driver<419 brand=tesla,driver>=440,driver<441 brand=tesla,driver>=450,driver<451"
 
 
 # Runtime
@@ -52,31 +52,32 @@ ENV NCCL_VERSION 2.8.4
 RUN set -eux; \
   apt update && \
   apt install -y --no-install-recommends \
-    cuda-libraries-11-2=11.2.2-1 \
-    libnpp-11-2=11.3.2.152-1 \
-    cuda-nvtx-11-2=11.2.152-1 \
-    libcublas-11-2=11.4.1.1043-1 \
-    libcusparse-11-2=11.4.1.1152-1 \
-    libnccl2=$NCCL_VERSION-1+cuda11.2 && \
+    cuda-libraries-11-0=11.0.3-1 \
+    libnpp-11-0=11.1.0.245-1 \
+    cuda-nvtx-11-0=11.0.167-1 \
+    libcublas-11-0=11.2.0.252-1 \
+    libcusparse-11-0=11.1.1.245-1 \
+    libnccl2=$NCCL_VERSION-1+cuda11.0 && \
   rm -rf /var/cache/apt/* && \
   rm -rf /var/lib/apt/lists/*
 
 # apt from auto upgrading the cublas package. See https://gitlab.com/nvidia/container-images/cuda/-/issues/88
-RUN apt-mark hold libcublas-11-2 libnccl2
+RUN apt-mark hold libcublas-11-0 libnccl2
 
 
-# Cudnn
-ENV CUDNN_VERSION 8.1.1.33
+# CUDNN
+ENV CUDNN_VERSION 8.0.5.39
 
 RUN set -eux; \
   apt update && \
   apt install -y --no-install-recommends \
-    libcudnn8=$CUDNN_VERSION-1+cuda11.2 && \
+    libcudnn8=$CUDNN_VERSION-1+cuda11.0 && \
   apt-mark hold libcudnn8 && \
   rm -rf /var/cache/apt/* && \
   rm -rf /var/lib/apt/lists/*
 
 # TODO: Install TensorRT in the future
 # TensorRT is not available for Ubuntu 20.04
+# Fortunately Tensorflow request TensorRT as optional dependency
 
 USER ${spark_uid}
