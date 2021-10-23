@@ -38,11 +38,10 @@ jobs:
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.SPARK_IMAGE_NAME }}
           tags: |
-            type=edge
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=ref,event=pr
+            type=match,pattern=.*,value=edge
 
       - name: Docker meta PySpark
         id: meta-pyspark
@@ -50,11 +49,10 @@ jobs:
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.PYSPARK_IMAGE_NAME }}
           tags: |
-            type=edge
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=ref,event=pr
+            type=match,pattern=.*,value=edge
 
       - name: Docker meta Jupyter
         id: meta-jupyter
@@ -62,11 +60,10 @@ jobs:
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.JUPYTER_IMAGE_NAME }}
           tags: |
-            type=edge
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=ref,event=pr
+            type=match,pattern=.*,value=edge
 
       - name: Docker meta Spark GPU
         id: meta-spark-gpu
@@ -74,11 +71,10 @@ jobs:
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.SPARK_GPU_IMAGE_NAME }}
           tags: |
-            type=edge
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=ref,event=pr
+            type=match,pattern=.*,value=edge
 
       - name: Docker meta PySpark GPU
         id: meta-pyspark-gpu
@@ -86,11 +82,10 @@ jobs:
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.PYSPARK_GPU_IMAGE_NAME }}
           tags: |
-            type=edge
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=ref,event=pr
+            type=match,pattern=.*,value=edge
 
       - name: Docker meta Jupyter GPU
         id: meta-jupyter-gpu
@@ -98,11 +93,10 @@ jobs:
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.JUPYTER_GPU_IMAGE_NAME }}
           tags: |
-            type=edge
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=ref,event=pr
+            type=match,pattern=.*,value=edge
 
       - name: Set create timestamp
         id: meta-create-timestamp
