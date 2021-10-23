@@ -32,8 +32,8 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
 
-      - name: Set container tags
-        id: container-tags
+      - name: Set common container metadata
+        id: meta-common
         run: |
           TAGS=$(cat << EOF
             type=semver,priority=900,pattern={{raw}}
@@ -47,53 +47,49 @@ jobs:
           TAGS="${TAGS//$'\n'/'%0A'}"
           TAGS="${TAGS//$'\r'/'%0D'}"
           echo ::set-output name=tags::$TAGS
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 
       - name: Docker meta Spark
         id: meta-spark
         uses: docker/metadata-action@v3
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.SPARK_IMAGE_NAME }}
-          tags: ${{ steps.container-tags.outputs.tags }}
+          tags: ${{ steps.meta-common.outputs.tags }}
 
       - name: Docker meta PySpark
         id: meta-pyspark
         uses: docker/metadata-action@v3
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.PYSPARK_IMAGE_NAME }}
-          tags: ${{ steps.container-tags.outputs.tags }}
+          tags: ${{ steps.meta-common.outputs.tags }}
 
       - name: Docker meta Jupyter
         id: meta-jupyter
         uses: docker/metadata-action@v3
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.JUPYTER_IMAGE_NAME }}
-          tags: ${{ steps.container-tags.outputs.tags }}
+          tags: ${{ steps.meta-common.outputs.tags }}
 
       - name: Docker meta Spark GPU
         id: meta-spark-gpu
         uses: docker/metadata-action@v3
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.SPARK_GPU_IMAGE_NAME }}
-          tags: ${{ steps.container-tags.outputs.tags }}
+          tags: ${{ steps.meta-common.outputs.tags }}
 
       - name: Docker meta PySpark GPU
         id: meta-pyspark-gpu
         uses: docker/metadata-action@v3
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.PYSPARK_GPU_IMAGE_NAME }}
-          tags: ${{ steps.container-tags.outputs.tags }}
+          tags: ${{ steps.meta-common.outputs.tags }}
 
       - name: Docker meta Jupyter GPU
         id: meta-jupyter-gpu
         uses: docker/metadata-action@v3
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.JUPYTER_GPU_IMAGE_NAME }}
-          tags: ${{ steps.container-tags.outputs.tags }}
-
-      - name: Set create timestamp
-        id: meta-create-timestamp
-        run: |
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          tags: ${{ steps.meta-common.outputs.tags }}
 
       - name: Download Spark
         working-directory: ./base-spark
@@ -137,7 +133,7 @@ jobs:
             org.opencontainers.image.url=${{ github.event.repository.html_url }}
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
             org.opencontainers.image.version=${{ steps.meta-spark.outputs.version }}
-            org.opencontainers.image.created=${{ steps.meta-create-timestamp.outputs.created }}
+            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
 
       - name: Build PySpark Docker image
@@ -158,7 +154,7 @@ jobs:
             org.opencontainers.image.url=${{ github.event.repository.html_url }}
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
             org.opencontainers.image.version=${{ steps.meta-pyspark.outputs.version }}
-            org.opencontainers.image.created=${{ steps.meta-create-timestamp.outputs.created }}
+            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
 
       - name: Build PySpark with Jupyter server Docker image
@@ -177,7 +173,7 @@ jobs:
             org.opencontainers.image.url=${{ github.event.repository.html_url }}
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
             org.opencontainers.image.version=${{ steps.meta-jupyter.outputs.version }}
-            org.opencontainers.image.created=${{ steps.meta-create-timestamp.outputs.created }}
+            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
 
       - name: Build Spark GPU Docker image
@@ -196,7 +192,7 @@ jobs:
             org.opencontainers.image.url=${{ github.event.repository.html_url }}
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
             org.opencontainers.image.version=${{ steps.meta-spark-gpu.outputs.version }}
-            org.opencontainers.image.created=${{ steps.meta-create-timestamp.outputs.created }}
+            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
 
       - name: Build PySpark GPU Docker image
@@ -217,7 +213,7 @@ jobs:
             org.opencontainers.image.url=${{ github.event.repository.html_url }}
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
             org.opencontainers.image.version=${{ steps.meta-pyspark-gpu.outputs.version }}
-            org.opencontainers.image.created=${{ steps.meta-create-timestamp.outputs.created }}
+            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
 
       - name: Build PySpark GPU with Jupyter server Docker image
@@ -236,7 +232,7 @@ jobs:
             org.opencontainers.image.url=${{ github.event.repository.html_url }}
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
             org.opencontainers.image.version=${{ steps.meta-jupyter-gpu.outputs.version }}
-            org.opencontainers.image.created=${{ steps.meta-create-timestamp.outputs.created }}
+            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
 
       - name: Login to DockerHub
