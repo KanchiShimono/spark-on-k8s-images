@@ -32,83 +32,63 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
 
-      - name: Docker meta Spark
-        id: meta-spark
-        uses: docker/metadata-action@v3
-        with:
-          images: ${{ env.IMAGE_OWNER }}/${{ env.SPARK_IMAGE_NAME }}
-          tags: |
+      - name: Set container tags
+        id: container-tags
+        run: |
+          TAGS="
             type=semver,priority=900,pattern={{raw}}
             type=semver,priority=900,pattern=v{{major}}
             type=semver,priority=900,pattern=v{{major}}.{{minor}}
             type=edge,priority=600
             type=ref,priority=500,event=pr
             type=ref,priority=700,event=branch
+          "
+          TAGS="${TAGS//'%'/'%25'}"
+          TAGS="${TAGS//$'\n'/'%0A'}"
+          TAGS="${TAGS//$'\r'/'%0D'}"
+          echo ::set-output name=tags::$TAGS
+
+      - name: Docker meta Spark
+        id: meta-spark
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.IMAGE_OWNER }}/${{ env.SPARK_IMAGE_NAME }}
+          tags: ${{ steps.container-tags.outputs.tags }}
 
       - name: Docker meta PySpark
         id: meta-pyspark
         uses: docker/metadata-action@v3
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.PYSPARK_IMAGE_NAME }}
-          tags: |
-            type=semver,priority=900,pattern={{raw}}
-            type=semver,priority=900,pattern=v{{major}}
-            type=semver,priority=900,pattern=v{{major}}.{{minor}}
-            type=edge,priority=600
-            type=ref,priority=500,event=pr
-            type=ref,priority=700,event=branch
+          tags: ${{ steps.container-tags.outputs.tags }}
 
       - name: Docker meta Jupyter
         id: meta-jupyter
         uses: docker/metadata-action@v3
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.JUPYTER_IMAGE_NAME }}
-          tags: |
-            type=semver,priority=900,pattern={{raw}}
-            type=semver,priority=900,pattern=v{{major}}
-            type=semver,priority=900,pattern=v{{major}}.{{minor}}
-            type=edge,priority=600
-            type=ref,priority=500,event=pr
-            type=ref,priority=700,event=branch
+          tags: ${{ steps.container-tags.outputs.tags }}
 
       - name: Docker meta Spark GPU
         id: meta-spark-gpu
         uses: docker/metadata-action@v3
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.SPARK_GPU_IMAGE_NAME }}
-          tags: |
-            type=semver,priority=900,pattern={{raw}}
-            type=semver,priority=900,pattern=v{{major}}
-            type=semver,priority=900,pattern=v{{major}}.{{minor}}
-            type=edge,priority=600
-            type=ref,priority=500,event=pr
-            type=ref,priority=700,event=branch
+          tags: ${{ steps.container-tags.outputs.tags }}
 
       - name: Docker meta PySpark GPU
         id: meta-pyspark-gpu
         uses: docker/metadata-action@v3
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.PYSPARK_GPU_IMAGE_NAME }}
-          tags: |
-            type=semver,priority=900,pattern={{raw}}
-            type=semver,priority=900,pattern=v{{major}}
-            type=semver,priority=900,pattern=v{{major}}.{{minor}}
-            type=edge,priority=600
-            type=ref,priority=500,event=pr
-            type=ref,priority=700,event=branch
+          tags: ${{ steps.container-tags.outputs.tags }}
 
       - name: Docker meta Jupyter GPU
         id: meta-jupyter-gpu
         uses: docker/metadata-action@v3
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.JUPYTER_GPU_IMAGE_NAME }}
-          tags: |
-            type=semver,priority=900,pattern={{raw}}
-            type=semver,priority=900,pattern=v{{major}}
-            type=semver,priority=900,pattern=v{{major}}.{{minor}}
-            type=edge,priority=600
-            type=ref,priority=500,event=pr
-            type=ref,priority=700,event=branch
+          tags: ${{ steps.container-tags.outputs.tags }}
 
       - name: Set create timestamp
         id: meta-create-timestamp
