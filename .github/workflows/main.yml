@@ -35,14 +35,14 @@ jobs:
       - name: Set container tags
         id: container-tags
         run: |
-          TAGS="
+          TAGS=$(cat << EOF
             type=semver,priority=900,pattern={{raw}}
             type=semver,priority=900,pattern=v{{major}}
             type=semver,priority=900,pattern=v{{major}}.{{minor}}
             type=edge,priority=600
             type=ref,priority=500,event=pr
             type=ref,priority=700,event=branch
-          "
+          EOF)
           TAGS="${TAGS//'%'/'%25'}"
           TAGS="${TAGS//$'\n'/'%0A'}"
           TAGS="${TAGS//$'\r'/'%0D'}"
