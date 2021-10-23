@@ -42,7 +42,7 @@ jobs:
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,value=latest
+            type=semver,pattern={{raw}},value=latest
             type=ref,event=branch
             type=ref,event=pr
 
@@ -56,7 +56,7 @@ jobs:
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,value=latest
+            type=semver,pattern={{raw}},value=latest
             type=ref,event=branch
             type=ref,event=pr
 
@@ -70,7 +70,7 @@ jobs:
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,value=latest
+            type=semver,pattern={{raw}},value=latest
             type=ref,event=branch
             type=ref,event=pr
 
@@ -84,7 +84,7 @@ jobs:
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,value=latest
+            type=semver,pattern={{raw}},value=latest
             type=ref,event=branch
             type=ref,event=pr
 
@@ -98,7 +98,7 @@ jobs:
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,value=latest
+            type=semver,pattern={{raw}},value=latest
             type=ref,event=branch
             type=ref,event=pr
 
@@ -112,7 +112,7 @@ jobs:
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,value=latest
+            type=semver,pattern={{raw}},value=latest
             type=ref,event=branch
             type=ref,event=pr
 
