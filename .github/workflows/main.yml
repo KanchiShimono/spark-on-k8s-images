@@ -255,7 +255,7 @@ jobs:
           PYSPARK_GPU_TAGS: ${{ steps.meta-pyspark-gpu.outputs.tags }}
           JUPYTER_GPU_TAGS: ${{ steps.meta-jupyter-gpu.outputs.tags }}
         run: |
-          TAGS=$(\
+          TAGS=(\
             "${SPARK_TAGS//,/ }" \
             "${PYSPARK_TAGS//,/ }" \
             "${JUPYTER_TAGS//,/ }" \
