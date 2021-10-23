@@ -55,6 +55,9 @@ jobs:
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.SPARK_IMAGE_NAME }}
           tags: ${{ steps.meta-common.outputs.tags }}
+          labels: |
+            org.opencontainers.image.title=${{ env.SPARK_IMAGE_NAME }}
+            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
 
       - name: Docker meta PySpark
         id: meta-pyspark
@@ -62,6 +65,9 @@ jobs:
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.PYSPARK_IMAGE_NAME }}
           tags: ${{ steps.meta-common.outputs.tags }}
+          labels: |
+            org.opencontainers.image.title=${{ env.PYSPARK_IMAGE_NAME }}
+            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
 
       - name: Docker meta Jupyter
         id: meta-jupyter
@@ -69,6 +75,9 @@ jobs:
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.JUPYTER_IMAGE_NAME }}
           tags: ${{ steps.meta-common.outputs.tags }}
+          labels: |
+            org.opencontainers.image.title=${{ env.JUPYTER_IMAGE_NAME }}
+            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
 
       - name: Docker meta Spark GPU
         id: meta-spark-gpu
@@ -76,6 +85,9 @@ jobs:
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.SPARK_GPU_IMAGE_NAME }}
           tags: ${{ steps.meta-common.outputs.tags }}
+          labels: |
+            org.opencontainers.image.title=${{ env.SPARK_GPU_IMAGE_NAME }}
+            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
 
       - name: Docker meta PySpark GPU
         id: meta-pyspark-gpu
@@ -83,6 +95,9 @@ jobs:
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.PYSPARK_GPU_IMAGE_NAME }}
           tags: ${{ steps.meta-common.outputs.tags }}
+          labels: |
+            org.opencontainers.image.title=${{ env.PYSPARK_GPU_IMAGE_NAME }}
+            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
 
       - name: Docker meta Jupyter GPU
         id: meta-jupyter-gpu
@@ -90,6 +105,9 @@ jobs:
         with:
           images: ${{ env.IMAGE_OWNER }}/${{ env.JUPYTER_GPU_IMAGE_NAME }}
           tags: ${{ steps.meta-common.outputs.tags }}
+          labels: |
+            org.opencontainers.image.title=${{ env.JUPYTER_GPU_IMAGE_NAME }}
+            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
 
       - name: Download Spark
         working-directory: ./base-spark
@@ -127,14 +145,7 @@ jobs:
             AWS_JAVA_SDK_VERSION=${{ env.AWS_JAVA_SDK_VERSION }}
           load: true
           tags: ${{ steps.meta-spark.outputs.tags }}
-          labels: |
-            org.opencontainers.image.title=${{ env.SPARK_IMAGE_NAME }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ steps.meta-spark.outputs.version }}
-            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
+          labels: ${{ steps.meta-spark.outputs.labels }}
 
       - name: Build PySpark Docker image
         uses: docker/build-push-action@v2
@@ -148,14 +159,7 @@ jobs:
             python_version=${{ env.PYTHON_VERSION }}
           load: true
           tags: ${{ steps.meta-pyspark.outputs.tags }}
-          labels: |
-            org.opencontainers.image.title=${{ env.PYSPARK_IMAGE_NAME }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ steps.meta-pyspark.outputs.version }}
-            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
+          labels: ${{ steps.meta-pyspark.outputs.labels }}
 
       - name: Build PySpark with Jupyter server Docker image
         uses: docker/build-push-action@v2
@@ -167,14 +171,7 @@ jobs:
             spark_uid=${{ env.SPARK_UID }}
           load: true
           tags: ${{ steps.meta-jupyter.outputs.tags }}
-          labels: |
-            org.opencontainers.image.title=${{ env.JUPYTER_IMAGE_NAME }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ steps.meta-jupyter.outputs.version }}
-            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
+          labels: ${{ steps.meta-jupyter.outputs.labels }}
 
       - name: Build Spark GPU Docker image
         uses: docker/build-push-action@v2
@@ -186,14 +183,7 @@ jobs:
             spark_uid=${{ env.SPARK_UID }}
           load: true
           tags: ${{ steps.meta-spark-gpu.outputs.tags }}
-          labels: |
-            org.opencontainers.image.title=${{ env.SPARK_GPU_IMAGE_NAME }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ steps.meta-spark-gpu.outputs.version }}
-            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
+          labels: ${{ steps.meta-spark-gpu.outputs.labels }}
 
       - name: Build PySpark GPU Docker image
         uses: docker/build-push-action@v2
@@ -207,14 +197,7 @@ jobs:
             python_version=${{ env.PYTHON_VERSION }}
           load: true
           tags: ${{ steps.meta-pyspark-gpu.outputs.tags }}
-          labels: |
-            org.opencontainers.image.title=${{ env.PYSPARK_GPU_IMAGE_NAME }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ steps.meta-pyspark-gpu.outputs.version }}
-            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
+          labels: ${{ steps.meta-pyspark-gpu.outputs.labels }}
 
       - name: Build PySpark GPU with Jupyter server Docker image
         uses: docker/build-push-action@v2
@@ -226,14 +209,7 @@ jobs:
             spark_uid=${{ env.SPARK_UID }}
           load: true
           tags: ${{ steps.meta-jupyter-gpu.outputs.tags }}
-          labels: |
-            org.opencontainers.image.title=${{ env.JUPYTER_GPU_IMAGE_NAME }}
-            org.opencontainers.image.description=${{ github.event.repository.description }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ steps.meta-jupyter-gpu.outputs.version }}
-            org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
-            org.opencontainers.image.revision=${{ github.sha }}
+          labels: ${{ steps.meta-jupyter-gpu.outputs.labels }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
