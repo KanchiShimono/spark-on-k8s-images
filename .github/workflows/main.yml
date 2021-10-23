@@ -42,8 +42,6 @@ jobs:
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,pattern={{raw}},value=latest
-            type=ref,event=branch
             type=ref,event=pr
 
       - name: Docker meta PySpark
@@ -56,8 +54,6 @@ jobs:
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,pattern={{raw}},value=latest
-            type=ref,event=branch
             type=ref,event=pr
 
       - name: Docker meta Jupyter
@@ -70,8 +66,6 @@ jobs:
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,pattern={{raw}},value=latest
-            type=ref,event=branch
             type=ref,event=pr
 
       - name: Docker meta Spark GPU
@@ -84,8 +78,6 @@ jobs:
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,pattern={{raw}},value=latest
-            type=ref,event=branch
             type=ref,event=pr
 
       - name: Docker meta PySpark GPU
@@ -98,8 +90,6 @@ jobs:
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,pattern={{raw}},value=latest
-            type=ref,event=branch
             type=ref,event=pr
 
       - name: Docker meta Jupyter GPU
@@ -112,8 +102,6 @@ jobs:
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,pattern={{raw}},value=latest
-            type=ref,event=branch
             type=ref,event=pr
 
       - name: Set create timestamp
