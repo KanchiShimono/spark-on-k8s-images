@@ -36,12 +36,12 @@ jobs:
         id: meta-common
         run: |
           TAGS=$(cat << EOF
-            type=ref,event=branch
-            type=ref,event=pr
-            type=edge
             type=semver,pattern={{raw}}
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
+            type=edge
+            type=ref,event=branch
+            type=ref,event=pr
           EOF)
           # Replace linefeed characters to set multiline string to output.
           # https://github.community/t/set-output-truncates-multiline-strings/16852/3
