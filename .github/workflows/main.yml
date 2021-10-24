@@ -43,6 +43,8 @@ jobs:
             type=semver,pattern=v{{major}}
             type=semver,pattern=v{{major}}.{{minor}}
           EOF)
+          # Replace linefeed characters to set multiline string to output.
+          # https://github.community/t/set-output-truncates-multiline-strings/16852/3
           TAGS="${TAGS//'%'/'%25'}"
           TAGS="${TAGS//$'\n'/'%0A'}"
           TAGS="${TAGS//$'\r'/'%0D'}"
