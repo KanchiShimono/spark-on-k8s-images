@@ -36,12 +36,12 @@ jobs:
         id: meta-common
         run: |
           TAGS=$(cat << EOF
-            type=semver,priority=900,pattern={{raw}}
-            type=semver,priority=900,pattern=v{{major}}
-            type=semver,priority=900,pattern=v{{major}}.{{minor}}
-            type=edge,priority=600
-            type=ref,priority=500,event=pr
-            type=ref,priority=700,event=branch
+            type=ref,event=branch
+            type=ref,event=pr
+            type=edge
+            type=semver,pattern={{raw}}
+            type=semver,pattern=v{{major}}
+            type=semver,pattern=v{{major}}.{{minor}}
           EOF)
           TAGS="${TAGS//'%'/'%25'}"
           TAGS="${TAGS//$'\n'/'%0A'}"
