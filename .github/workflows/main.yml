@@ -32,7 +32,7 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
 
-      - name: Set common container metadata
+      - name: Set common image metadata to output
         id: meta-common
         run: |
           TAGS=$(cat << EOF
@@ -51,7 +51,7 @@ jobs:
           echo ::set-output name=tags::$TAGS
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 
-      - name: Docker meta Spark
+      - name: Container metadata [Spark]
         id: meta-spark
         uses: docker/metadata-action@v3
         with:
@@ -61,7 +61,7 @@ jobs:
             org.opencontainers.image.title=${{ env.SPARK_IMAGE_NAME }}
             org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
 
-      - name: Docker meta PySpark
+      - name: Container metadata [PySpark]
         id: meta-pyspark
         uses: docker/metadata-action@v3
         with:
@@ -71,7 +71,7 @@ jobs:
             org.opencontainers.image.title=${{ env.PYSPARK_IMAGE_NAME }}
             org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
 
-      - name: Docker meta Jupyter
+      - name: Container metadata [Jupyter]
         id: meta-jupyter
         uses: docker/metadata-action@v3
         with:
@@ -81,7 +81,7 @@ jobs:
             org.opencontainers.image.title=${{ env.JUPYTER_IMAGE_NAME }}
             org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
 
-      - name: Docker meta Spark GPU
+      - name: Container metadata [Spark GPU]
         id: meta-spark-gpu
         uses: docker/metadata-action@v3
         with:
@@ -91,7 +91,7 @@ jobs:
             org.opencontainers.image.title=${{ env.SPARK_GPU_IMAGE_NAME }}
             org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
 
-      - name: Docker meta PySpark GPU
+      - name: Container metadata [PySpark GPU]
         id: meta-pyspark-gpu
         uses: docker/metadata-action@v3
         with:
@@ -101,7 +101,7 @@ jobs:
             org.opencontainers.image.title=${{ env.PYSPARK_GPU_IMAGE_NAME }}
             org.opencontainers.image.created=${{ steps.meta-common.outputs.created }}
 
-      - name: Docker meta Jupyter GPU
+      - name: Container metadata [Jupyter GPU]
         id: meta-jupyter-gpu
         uses: docker/metadata-action@v3
         with:
@@ -118,13 +118,13 @@ jobs:
           tar xzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz
           mv spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} origin-spark
 
-      - name: Set up Docker Buildx
+      - name: Set up Buildx
         uses: docker/setup-buildx-action@v1
         with:
           driver: docker
           install: true
 
-      - name: Build Ubuntu based Spark and PySpark image by official tool
+      - name: Build [Spark and PySpark] by official tool
         working-directory: ./base-spark
         run: >
           origin-spark/bin/docker-image-tool.sh
@@ -135,7 +135,7 @@ jobs:
           -u ${SPARK_UID}
           build
 
-      - name: Build custom Spark Docker image for Spark on k8s
+      - name: Build [Spark]
         uses: docker/build-push-action@v2
         with:
           context: ./spark
@@ -149,7 +149,7 @@ jobs:
           tags: ${{ steps.meta-spark.outputs.tags }}
           labels: ${{ steps.meta-spark.outputs.labels }}
 
-      - name: Build PySpark Docker image
+      - name: Build [PySpark]
         uses: docker/build-push-action@v2
         with:
           context: ./pyspark
@@ -163,7 +163,7 @@ jobs:
           tags: ${{ steps.meta-pyspark.outputs.tags }}
           labels: ${{ steps.meta-pyspark.outputs.labels }}
 
-      - name: Build PySpark with Jupyter server Docker image
+      - name: Build [Jupyter]
         uses: docker/build-push-action@v2
         with:
           context: ./pyspark-jupyter
@@ -175,7 +175,7 @@ jobs:
           tags: ${{ steps.meta-jupyter.outputs.tags }}
           labels: ${{ steps.meta-jupyter.outputs.labels }}
 
-      - name: Build Spark GPU Docker image
+      - name: Build [Spark GPU]
         uses: docker/build-push-action@v2
         with:
           context: ./spark-gpu
@@ -187,7 +187,7 @@ jobs:
           tags: ${{ steps.meta-spark-gpu.outputs.tags }}
           labels: ${{ steps.meta-spark-gpu.outputs.labels }}
 
-      - name: Build PySpark GPU Docker image
+      - name: Build [PySpark GPU]
         uses: docker/build-push-action@v2
         with:
           context: ./pyspark
@@ -201,7 +201,7 @@ jobs:
           tags: ${{ steps.meta-pyspark-gpu.outputs.tags }}
           labels: ${{ steps.meta-pyspark-gpu.outputs.labels }}
 
-      - name: Build PySpark GPU with Jupyter server Docker image
+      - name: Build [Jupyter GPU]
         uses: docker/build-push-action@v2
         with:
           context: ./pyspark-jupyter
